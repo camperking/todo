@@ -27,7 +27,26 @@ export async function get(req, res) {
         
         accounts.insert(todoList);
 
-        todoList.todo = [];
+        todoList.todo = [
+            {
+                text: 'add todo items',
+                state: 'todo',
+                id: rndHash(6),
+                list: id
+            },
+            {
+                text: 'set password protection',
+                state: 'todo',
+                id: rndHash(6),
+                list: id
+            },
+            {
+                text: 'create new todo list',
+                state: 'done',
+                id: rndHash(6),
+                list: id
+            }
+        ];
 
         res.end(JSON.stringify(todoList))
 

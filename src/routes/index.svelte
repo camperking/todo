@@ -1,50 +1,47 @@
 <script>
-	import successkid from 'images/successkid.jpg';
+	
 </script>
 
+<div class="main">
+	<h1>TodoList</h1>
+	<h2>easy to use, share with your friends, access from everywhere</h2>
+	<a href="todo/new">Try now!</a>
+</div>
+
+
 <style>
-	h1, figure, p {
-		text-align: center;
-		margin: 0 auto;
-	}
 
+	.main {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	
 	h1 {
-		font-size: 2.8em;
+		border-bottom: 2px solid #ff9100;
+		font-size: 3em;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	h2 {
+		color: rgba(255, 255, 255, 0.7);
+		text-align: center;
+	}
+
+	a {
+		text-decoration: none;
+		border-bottom: 2px solid gray;
+		margin: 0 1em;
 		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
 	}
 
-	figure {
-		margin: 0 0 1em 0;
+	a:hover {
+		border-bottom-color: #ff9100;
 	}
 
-	img {
-		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
-	}
-
-	p {
-		margin: 1em auto;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
-	}
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>TodoList App - Create and share Todo lists and protect them with a password</title>
 </svelte:head>
-
-<h1>Great success!</h1>
-
-<figure>
-	<img alt="Success Kid" src="{successkid}">
-	<figcaption>Have fun with Sapper!</figcaption>
-</figure>
-
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>

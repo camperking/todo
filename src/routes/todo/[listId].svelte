@@ -5,6 +5,7 @@
         const res = await this.fetch(`api/account/${listId}`);
         const todoList = await res.json();
 
+
         return { todoList, listId }
     }
 </script>
@@ -12,11 +13,20 @@
 
 <script>
     import { stores } from '@sapper/app';
+    import { quintOut, quintInOut } from 'svelte/easing';
+	import { crossfade, fade } from 'svelte/transition';
+    import { flip } from 'svelte/animate';
+    import { onMount } from 'svelte';
+    
     const { page, session } = stores();
 
     export let todoList;
     export let listId;
 
+    onMount(() => {
+        console.log(todoList.id);
+        history.pushState({}, todoList.id, 'todo/'+todoList.id);
+    });
 
     let password = '';
     let passwordError = '';
@@ -79,6 +89,7 @@
             body: JSON.stringify(body)
         });
         const data = await res.json();
+        todoList = todoList;
     }
 
 
@@ -95,6 +106,7 @@
         });
         const data = await res.json();
         showChangePassword = false;
+        password = newPassword;
     }
 
     async function editTitle() {
@@ -115,7 +127,7 @@
     }
 
 
-    async function delTodo(i, id) {
+    async function remove(id) {
         const body = {
             id,
             password
@@ -129,86 +141,117 @@
 
         const data = await res.json();
 
-        todoList.todo.splice(i, 1);
-        todoList.todo = todoList.todo;
+        todoList.todo = todoList.todo.filter(t => t.id === id ? false : true );
     }
+
+    const [send, receive] = crossfade({
+		fallback(node, params) {
+			const style = getComputedStyle(node);
+			const transform = style.transform === 'none' ? '' : style.transform;
+
+			return {
+				duration: 600,
+				easing: quintInOut,
+				css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`
+			};
+		}
+	});
 
 </script>
 
-<div>
+
+<div class="main">
     {#if todoList.error === 'password'}
-        <h2>Password protected todoList</h2>
-        <label>
-            Password:
-            <input bind:value={password} type="password">
-        </label>
-        <button on:click={unlock}>Submit</button>
-        {passwordError}
+        <div>
+            <h2>Password protected todoList</h2>
+            <label>
+                Password:
+                <input bind:value={password} type="password">
+            </label>
+            <button on:click={unlock}>Submit</button>
+            {passwordError}
+        </div>
     {:else if todoList.error === 'unavailable'}
         no todoList found
     {:else}
-        link to your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
-        <!-- {JSON.stringify(todoList)} -->
+
+        share your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
+        
+        <div class="title">
+            {#if showEditTitle}
+                <input bind:value={todoList.name}>
+                <button on:click={editTitle}>submit</button>
+            {:else}
+                <h1>{todoList.name}</h1>&nbsp;
+                <button on:click={() => showEditTitle = true} class="material-icons" >create</button>
+            {/if}
+        </div>
+
         <div>
             {#if showChangePassword}
                 <input bind:value={newPassword} type="password">
                 <button on:click={changePassword}>change</button>
             {:else}
-                <button on:click={() => showChangePassword = true}>change password</button>
+                <button on:click={() => showChangePassword = true} class="material-icons">
+                    {#if password === ''}
+                        lock_open
+                    {:else}
+                        lock
+                    {/if}
+                </button>
             {/if}
         </div>
 
-        <div class="main">
 
-            <div class="title">
-                {#if showEditTitle}
-                    <input bind:value={todoList.name}>
-                    <button on:click={editTitle}>submit</button>
-                {:else}
-                    <h1>{todoList.name}</h1>&nbsp;
-                    <button on:click={() => showEditTitle = true} >edit</button>
-                {/if}
+        <div class="todo-input">
+            <input bind:value><button on:click={add} class="material-icons">add</button>
+        </div>
+
+        <div class="todo-list">
+            <div>
+                <h2>todo</h2>
+                {#each todoList.todo.filter(t => t.state === 'todo' ? true : false) as todo (todo.id)}
+                    <div 
+                        class="todo-item"
+                        in:receive="{{key: todo.id}}"
+                        out:send="{{key: todo.id}}"
+                        animate:flip>
+                        <div>
+                            <label>
+                                <input type="checkbox" checked={false} on:click={() => {updateState(todo); todo.state = 'done';}}>
+                                {todo.text}
+                            </label>
+                        </div>
+                        <button on:click={() => remove(todo.id)} class="material-icons">delete</button>
+                    </div>
+                {/each}
             </div>
-
-            <input bind:value><button on:click={add}>add</button>
-
-            <div class="todo-list">
-                <div>
-                    <h2>todo</h2>
-                    {#each todoList.todo as todo, i}
-                        {#if todo.state === 'todo'}
-                            <div class="todo-item">
-                                <div>
-                                    <label>
-                                        <input type="checkbox" checked={false} on:click={() => {updateState(todo); todo.state = 'done';}}>
-                                        {todo.text}
-                                    </label>
-                                </div>
-                                <button on:click={() => delTodo(i, todo.id)}>X</button>
-                            </div>
-                        {/if}
-                    {/each}
-                </div>
-                <div>
-                    <h2>done</h2>
-                    {#each todoList.todo as todo, i}
-                        {#if todo.state === 'done'}
-                            <div class="todo-item">
-                                <div>
-                                    <label>
-                                        <input type="checkbox" checked on:click={() => {updateState(todo); todo.state = 'todo'}}>
-                                        {todo.text}
-                                    </label>
-                                </div>
-                                <button on:click={() => delTodo(i, todo.id)}>X</button>
-                            </div>
-                        {/if}
-                    {/each}
-                </div>
+            <div>
+                <h2>done</h2>
+                {#each todoList.todo.filter(t => t.state === 'done' ? true : false) as todo (todo.id)}
+                    <div 
+                        class="todo-item"
+                        in:receive="{{key: todo.id}}"
+                        out:send="{{key: todo.id}}"
+                        animate:flip>
+                        <div>
+                            <label>
+                                <input type="checkbox" checked on:click={() => {updateState(todo); todo.state = 'todo'}}>
+                                {todo.text}
+                            </label>
+                        </div>
+                        <button on:click={() => remove(todo.id)} class="material-icons">delete</button>   
+                    </div>
+                {/each}
             </div>
         </div>
+
     {/if}
 </div>
+
 
 <style>
     a {
@@ -216,8 +259,29 @@
         text-decoration: none;
     }
 
+    button {
+        color: white;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        color: #ff9100;
+    }
+
+    input {
+        font-size: 1.2em;
+    }
+
     .main {
+        
         text-align: center;
+        min-height: 50vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .title {
@@ -227,20 +291,35 @@
         margin-bottom: 1em;
     }
 
+    .todo-input {
+        display: flex;
+        align-items: center;
+    }
+
+    .todo-input button {
+        font-size: 32px;
+    }
+
     .todo-list {
         display: flex;
         justify-content: space-evenly;
         text-align: left;
+        width: 100%;
     }
 
     .todo-item {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        font-size: 1.2em;
     }
 
     .todo-item button {
-        border: none;
-        background-color: white;
-        cursor: pointer;
+        font-size: 24px;
     }
+
 </style>
+
+<svelte:head>
+	<title>{todoList.id} | TodoList App - Create and share Todo lists and protect them with a password</title>
+</svelte:head>

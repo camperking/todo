@@ -11,10 +11,13 @@ export async function post (req, res) {
         if (todoList.password === password) {
             const todos = collections.todos;
             const todo = todos.findOne({id});
-            //todo.state = 'done';
-            todo.state = state;
-            todos.update(todo);
-            res.end(JSON.stringify(todo));
+            if (todo !== null) {
+                todo.state = state;
+                todos.update(todo);
+                res.end(JSON.stringify(todo));
+            } else {
+                res.end('{"error": "unavailable"}'); 
+            }
         } else {
             res.end('{"error": "unavailable"}');    
         }
