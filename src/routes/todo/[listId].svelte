@@ -151,7 +151,7 @@
 
 			return {
 				duration: 600,
-				easing: quintInOut,
+				easing: quintOut,
 				css: t => `
 					transform: ${transform} scale(${t});
 					opacity: ${t}
@@ -178,7 +178,9 @@
         no todoList found
     {:else}
 
-        share your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
+        <div>
+            share your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
+        </div>
         
         <div class="title">
             {#if showEditTitle}
@@ -240,7 +242,7 @@
                         <div>
                             <label>
                                 <input type="checkbox" checked on:click={() => {updateState(todo); todo.state = 'todo'}}>
-                                {todo.text}
+                                <del>{todo.text}</del>
                             </label>
                         </div>
                         <button on:click={() => remove(todo.id)} class="material-icons">delete</button>   
@@ -280,7 +282,7 @@
         min-height: 50vh;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         align-items: center;
     }
 
@@ -289,6 +291,7 @@
         justify-content: center;
         align-items: baseline;
         margin-bottom: 1em;
+        margin-top: 2em;
     }
 
     .todo-input {
@@ -321,5 +324,5 @@
 </style>
 
 <svelte:head>
-	<title>{todoList.id} | TodoList App - Create and share Todo lists and protect them with a password</title>
+	<title>TodoList App | {todoList.id} | Create and share Todo lists and protect them with a password</title>
 </svelte:head>
