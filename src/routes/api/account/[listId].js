@@ -54,7 +54,7 @@ export async function get(req, res) {
         const account = accounts.findOne({id: listId});
         if (account !== null) {
             if (account.password !== '') {
-                res.end('{"error": "password"}');
+                res.end(`{"error": "password", "id": "${listId}"}`);
             } else {
 
                 const todos = collections.todos;

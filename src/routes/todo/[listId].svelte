@@ -13,8 +13,8 @@
 
 <script>
     import { stores } from '@sapper/app';
-    import { quintOut, quintInOut } from 'svelte/easing';
-	import { crossfade, fade, slide, fly } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
+	import { crossfade, fly } from 'svelte/transition';
     import { flip } from 'svelte/animate';
     import { onMount } from 'svelte';
     
@@ -24,8 +24,7 @@
     export let listId;
 
     onMount(() => {
-        console.log(todoList.id);
-        history.pushState({}, todoList.id, 'todo/'+todoList.id);
+        history.pushState({n: 1}, todoList.id, 'todo/'+todoList.id);
     });
 
     let password = '';
@@ -54,7 +53,6 @@
 
         const data = await res.json();
 
-        
         todoList.todo.push(data);
         todoList = todoList;
         value = '';
@@ -68,7 +66,7 @@
             body: JSON.stringify({password})
         });
         const data = await res.json();
-        // console.log(data);
+
         if (data.error) {
             passwordError = data.error;
         } else {

@@ -4,7 +4,7 @@
 <div class="body">
 	<header>
 		
-		<a href="todo/new" class="feature">new list</a>
+		<a href="todo/new" class="feature" rel=external >new list</a>
 		<a href="/">home</a>
 		<a href="info">info</a>
 	</header>
