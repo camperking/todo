@@ -7,13 +7,17 @@
 		<a href="todo/new" class="feature">new list</a>
 		<a href="/">home</a>
 		<a href="info">info</a>
-		<a href="https://github.com/camperking/todo/">source</a>
 	</header>
 	<main>
 		<slot />
 	</main>
 	<footer>
-		by <a href="https://xdevbox.net/">xdevbox.net</a>
+		<div>
+			by <a href="https://xdevbox.net/">xdevbox.net</a> 
+		</div>
+		<div>
+			source on <a href="https://github.com/camperking/todo/">github</a>
+		</div>
 	</footer>
 </div>
 
@@ -31,11 +35,13 @@
 	header {
 		display: flex;
 		justify-content: end;
+		color: rgba(255, 255, 255, 0.7);
+		margin-top: 0.5em;
 	}
 
 	.feature {
 		/* border-bottom-color: #ff9100; */
-		color: #ff9100;
+		color: white;
 	}
 
 	main {
@@ -59,6 +65,12 @@
 
 	header {
 		text-transform: uppercase;
+	}
+
+	footer {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 0.5em 0.25em;
 	}
 
 	footer a {

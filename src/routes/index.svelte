@@ -1,8 +1,8 @@
 <script>
-	
+	import { scale } from 'svelte/transition';
 </script>
 
-<div class="main">
+<div class="main" in:scale={{delay: 600}}>
 	<h1>TodoList</h1>
 	<h2>easy to use, share with your friends, access from everywhere</h2>
 	<a href="todo/new">Try now!</a>
@@ -25,7 +25,7 @@
 	}
 
 	h2 {
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(255, 255, 255, 0.6);
 		text-align: center;
 	}
 
@@ -34,6 +34,7 @@
 		border-bottom: 2px solid gray;
 		margin: 0 1em;
 		text-transform: uppercase;
+		color: white;
 	}
 
 	a:hover {

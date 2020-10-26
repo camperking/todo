@@ -14,7 +14,7 @@
 <script>
     import { stores } from '@sapper/app';
     import { quintOut, quintInOut } from 'svelte/easing';
-	import { crossfade, fade } from 'svelte/transition';
+	import { crossfade, fade, slide, fly } from 'svelte/transition';
     import { flip } from 'svelte/animate';
     import { onMount } from 'svelte';
     
@@ -163,7 +163,7 @@
 </script>
 
 
-<div class="main">
+<div class="main" out:fly={{x: -300, y: -600}}>
     {#if todoList.error === 'password'}
         <div>
             <h2>Password protected todoList</h2>
@@ -214,7 +214,7 @@
 
         <div class="todo-list">
             <div>
-                <h2>todo</h2>
+                <h2>TODO</h2>
                 {#each todoList.todo.filter(t => t.state === 'todo' ? true : false) as todo (todo.id)}
                     <div 
                         class="todo-item"
@@ -232,7 +232,7 @@
                 {/each}
             </div>
             <div>
-                <h2>done</h2>
+                <h2>DONE</h2>
                 {#each todoList.todo.filter(t => t.state === 'done' ? true : false) as todo (todo.id)}
                     <div 
                         class="todo-item"
@@ -296,7 +296,13 @@
 
     .todo-input {
         display: flex;
+        justify-content: center;
         align-items: center;
+        /* min-width: 50vw; */
+    }
+
+    .todo-input input {
+        min-width: 20vw;
     }
 
     .todo-input button {
@@ -306,8 +312,10 @@
     .todo-list {
         display: flex;
         justify-content: space-evenly;
+        flex-wrap: wrap;
         text-align: left;
         width: 100%;
+        margin-top: 1em;
     }
 
     .todo-item {
@@ -315,10 +323,16 @@
         justify-content: space-between;
         align-items: center;
         font-size: 1.2em;
+        margin-bottom: 0.25em;
     }
 
     .todo-item button {
         font-size: 24px;
+    }
+
+    del {
+        text-decoration-color: black;
+        text-decoration-thickness: 2px;
     }
 
 </style>

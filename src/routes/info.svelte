@@ -2,8 +2,12 @@
 	<title>About todoList</title>
 </svelte:head>
 
+<script>
+    import { fade } from 'svelte/transition';
 
-<div class="main">
+</script>
+
+<div class="main" in:fade={{delay: 600}}>
     
     <h1>About this site</h1>
     
@@ -40,5 +44,11 @@
         margin: 0 auto;
         font-size: 1.2em;
     }
+
+    @media screen and (max-width: 992px) {
+        .main {
+            max-width: 90vw;
+        }
+}
 
 </style>
