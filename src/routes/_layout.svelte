@@ -34,7 +34,7 @@
 
 	header {
 		display: flex;
-		justify-content: end;
+		justify-content: flex-end;
 		color: rgba(255, 255, 255, 0.7);
 		margin-top: 0.5em;
 	}

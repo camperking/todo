@@ -177,7 +177,7 @@
     {:else}
 
         <div>
-            share your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
+            save and share your todoList: <a href={`todo/${todoList.id}`}>https://todo.xdevbox.net/todo/{todoList.id}</a>
         </div>
         
         <div class="title">
@@ -310,7 +310,7 @@
     .todo-list {
         display: flex;
         justify-content: space-evenly;
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
         text-align: left;
         width: 100%;
         margin-top: 1em;
@@ -332,6 +332,13 @@
         text-decoration-color: black;
         text-decoration-thickness: 2px;
     }
+
+    @media screen and (max-width: 600px) {
+        .todo-list {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+}
 
 </style>
 
